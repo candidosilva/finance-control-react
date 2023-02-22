@@ -7,6 +7,7 @@ import {
   TransactionsTable,
 } from "./styles";
 import transactions from "../../../server.json";
+import { dateFormatter, priceFormatter } from "../../utils/formatters";
 
 export function Transactions() {
   return (
@@ -26,11 +27,13 @@ export function Transactions() {
                   <td>
                     <PriceHighlight variant={transaction.type}>
                       {transaction.type === "outcome" && "- "}
-                      {transaction.price}
+                      {priceFormatter.format(transaction.price)}
                     </PriceHighlight>
                   </td>
                   <td>{transaction.category}</td>
-                  <td>{transaction.createdAt}</td>
+                  <td>
+                    {dateFormatter.format(new Date(transaction.createdAt))}
+                  </td>
                 </tr>
               );
             })}
