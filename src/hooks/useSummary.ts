@@ -7,8 +7,6 @@ export function useSummary() {
     return context.transactions;
   });
 
-  console.log(transactions);
-
   const summary = useMemo(() => {
     return transactions.reduce(
       (acc, transaction) => {
