@@ -47,6 +47,22 @@
       "type": "outcome",
       "createdAt": "2022-07-30T13:38:57.560Z",
       "id": 6
+    },
+    {
+      "description": "Cellphone",
+      "price": 5000,
+      "category": "living",
+      "type": "outcome",
+      "createdAt": "2023-02-24T01:31:17.097Z",
+      "id": 7
+    },
+    {
+      "description": "Computer",
+      "price": 7000,
+      "category": "living",
+      "type": "outcome",
+      "createdAt": "2023-02-24T01:31:45.950Z",
+      "id": 8
     }
   ]
 }

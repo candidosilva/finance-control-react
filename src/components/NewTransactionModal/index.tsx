@@ -10,6 +10,8 @@ import {
   TransactionTypeButton,
 } from "./styles";
 import { ArrowCircleDown, ArrowCircleUp, X } from "phosphor-react";
+import { useContextSelector } from "use-context-selector";
+import { TransactionsContext } from "../../context/TransactionsContext";
 
 const newTransactionFormSchema = z.object({
   description: z.string(),
@@ -21,6 +23,13 @@ const newTransactionFormSchema = z.object({
 type NewTransactionFormInputs = z.infer<typeof newTransactionFormSchema>;
 
 export function NewTransactionModal() {
+  const createTransaction = useContextSelector(
+    TransactionsContext,
+    (context) => {
+      return context.createTransaction;
+    }
+  );
+
   const {
     control,
     register,
@@ -33,6 +42,20 @@ export function NewTransactionModal() {
       type: "income",
     },
   });
+
+  async function handleCreateNewTransaction(data: NewTransactionFormInputs) {
+    const { description, price, category, type } = data;
+
+    await createTransaction({
+      description,
+      price,
+      category,
+      type,
+    });
+
+    reset();
+  }
+
   return (
     <Dialog.Portal>
       <Overlay />
@@ -44,17 +67,35 @@ export function NewTransactionModal() {
           <X size={24} />
         </CloseButton>
 
-        <form>
-          <input type="text" placeholder="Description" required />
-          <input type="number" placeholder="Price" required />
-          <input type="text" placeholder="Category" required />
+        <form onSubmit={handleSubmit(handleCreateNewTransaction)}>
+          <input
+            type="text"
+            placeholder="Description"
+            required
+            {...register("description")}
+          />
+          <input
+            type="number"
+            placeholder="Price"
+            required
+            {...register("price", { valueAsNumber: true })}
+          />
+          <input
+            type="text"
+            placeholder="Category"
+            required
+            {...register("category")}
+          />
 
           <Controller
             control={control}
             name="type"
             render={({ field }) => {
               return (
-                <TransactionType>
+                <TransactionType
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
                   <TransactionTypeButton variant="income" value="income">
                     <ArrowCircleUp size={24} />
                     Incoming
@@ -69,7 +110,9 @@ export function NewTransactionModal() {
             }}
           />
 
-          <button type="submit">Register</button>
+          <button type="submit" disabled={isSubmitting}>
+            Register
+          </button>
         </form>
       </Content>
     </Dialog.Portal>
